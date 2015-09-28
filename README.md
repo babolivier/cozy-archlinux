@@ -58,6 +58,6 @@ If you want to discuss or contribute to these packages, here are all the ways to
 * **By e-mail**: <brendan@cozycloud.cc>
 * **On the Cozy forums**: In [french](https://forum.cozy.io/t/cozy-sur-archlinux/1341) or in [english](https://forum.cozy.io/t/cozy-on-archlinux/1342)
 * **On IRC**: #cozycloud on irc.freenode.net, you'll find me there as *Dragavnir*
-* **Twitter**: [@BrenAbolivier](https://twitter.com/BrenAbolivier)
+* **On Twitter**: [@BrenAbolivier](https://twitter.com/BrenAbolivier)
 
 If you're around Brest or Rennes (France), we can even meet to talk a bit around a drink :-)
