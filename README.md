@@ -12,7 +12,7 @@ The stable versions of these packages are available on the official Archlinux Us
 
 ```
 yaourt -S cozy-apache
-yaourt -S cozy-nginx*
+yaourt -S cozy-nginx
 yaourt -S cozy-standalone*
 ```
 
