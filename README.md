@@ -38,7 +38,7 @@ Since Cozy is constitued with several bricks, we need a reverse proxy to link th
 
 As some people prefer using other software than Nginx or Apache 2 for reverse proxying, this package provides only the platform, without any web server nor configuration for it.
 
-If you want to refer to a configuration file for Nginx or Apache 2 to build your own one, you can find them on the official [repository](/cozy/cozy-debian) for the Debian/Ubuntu Cozy package.
+If you want to refer to a configuration file for Nginx or Apache 2 to build your own one, you can find them on the official [repository](https://github.com/cozy/cozy-debian) for the Debian/Ubuntu Cozy package.
 
 ## What is Cozy?
 
