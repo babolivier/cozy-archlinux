@@ -13,10 +13,8 @@ The stable versions of these packages are available on the official Archlinux Us
 ```
 yaourt -S cozy-apache
 yaourt -S cozy-nginx
-yaourt -S cozy-standalone*
+yaourt -S cozy-standalone
 ```
-
-\* these packages aren't available in AUR yet
 
 Please keep in mind that Cozy is currently only available with Node.JS 0.10.x, that's why we have to use another package than the `nodejs` package located in the official Archlinux repositories (v4.x). To have the platform running on Archlinux, we need to use the AUR package `nodejs10`, which will compile Node.JS v0.10.36, and can take a long time on small configurations. As the package is included in the dependances, you don't need to worry about previously installing the v0.10.x, but just keep in mind that it may take a while.
 
@@ -24,7 +22,7 @@ Please keep in mind that Cozy is currently only available with Node.JS 0.10.x, t
 
 Another way to install these packages is to clone this repository, then enter the selected package's directory and run `makepkg -si`. This will install the package with all the needed dependencies.
 
-**Caution:** This wil **NOT** install the dependencies located in AUR. If you chose to install the package this way, you'll need to manually install `cozy-indexer`, `nodejs10` and `coffee-script` **before** installing the chosen package (don't forget to install `nodejs10` before `coffee-script` to not screw up with dependencies).
+**Caution:** This wil **NOT** install the dependencies located in AUR. If you chose to install the package this way, you'll need to manually install `cozy-indexer` and `nodejs10` **before** installing the chosen package.
 
 ## Packages description
 
