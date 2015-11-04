@@ -1,9 +1,9 @@
-pkgbase = cozy-standalone
-	pkgdesc = A personal cloud you can hack, host and delete, packaged without any reverse proxy solution.
+pkgbase = cozy-nginx
+	pkgdesc = A personal cloud you can hack, host and delete, configured for the Nginx web server.
 	pkgver = 1.6
 	pkgrel = 1
 	url = https://cozy.io/
-	install = cozy-standalone.install
+	install = cozy-nginx.install
 	arch = any
 	license = GPL3
 	depends = ca-certificates
@@ -25,6 +25,7 @@ pkgbase = cozy-standalone
 	depends = nodejs10
 	depends = pwgen
 	depends = pngcrush
+	depends = nginx
 
-pkgname = cozy-standalone
+pkgname = cozy-nginx
 
