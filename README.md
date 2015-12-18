@@ -16,7 +16,7 @@ yaourt -S cozy-nginx
 yaourt -S cozy-standalone
 ```
 
-Please keep in mind that Cozy is currently only available with Node.JS 0.10.x, that's why we have to use another package than the `nodejs` package located in the official Archlinux repositories (v4.x). To have the platform running on Archlinux, we need to use the AUR package `nodejs10`, which will compile Node.JS v0.10.36, and can take a long time on small configurations. As the package is included in the dependances, you don't need to worry about previously installing the v0.10.x, but just keep in mind that it may take a while.
+Please keep in mind that Cozy is currently only available with Node.JS 0.10.x, that's why we have to use another package than the `nodejs` package located in the official Archlinux repositories (v4.x). To have the platform running on Archlinux, we need to use the AUR package `nodejs10`, which will compile Node.JS v0.10.40, and can take a long time on small configurations. As the package is included in the dependances, you don't need to worry about previously installing the v0.10.x, but just keep in mind that it may take a while.
 
 ### Via `makepkg`
 
