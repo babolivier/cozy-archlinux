@@ -252,7 +252,8 @@ pre_remove() {
 post_remove() {
     msg_blue "The Cozy database contains all your user data. Keeping it could be troublesome for further installations."
     while true; do
-        read -p "Do you want to erase the database? [Y/n] " yn
+        msg_blue "Do you want to erase the database? [Y/n]"
+        read yn
         case $yn in
             [Nn]* ) KEEP_DB=false; break;;
             * ) KEEP_DB=true; break;;
