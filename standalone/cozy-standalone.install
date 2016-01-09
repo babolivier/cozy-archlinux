@@ -16,6 +16,52 @@ bold="${all_off}$(tput bold)"
 blue="${bold}$(tput setaf 4)"
 
 post_install() {
+    msg_blue "Thanks for using Cozy. This package is still being tested, if you encounter any difficulty with it, please head over the AUR comments, the Cozy forums or https://github.com/babolivier/cozy-archlinux/issues to give your feedback."
+
+    msg_blue "Checking Node.js version"
+    curl https://raw.githubusercontent.com/cozy/cozy-debian/master/compare-version.py > /usr/share/cozy/compare-version.py
+    NODEJS=`which node`
+    if [ -x $NODEJS ]; then
+        NODE_VERSION=`$NODEJS -v`
+        python2 /usr/share/cozy/compare-version.py "$NODE_VERSION" '>=' '0.10.20' && RESULT=$? || RESULT=$?
+        if [ "$RESULT" = "1" ]; then
+            msg_blue "Node.js version is too low. Recommended versions are all 0.10.xx versions starting from 0.10.20"
+            exit 1
+        fi
+        python2 /usr/share/cozy/compare-version.py "$NODE_VERSION" '<' '0.12.00' && RESULT=$? || RESULT=$?
+        if [ "$RESULT" = "1" ]; then
+            msg_blue "Node.js version is too high. Recommended versions are all 0.10.xx versions starting from 0.10.20"
+            exit 1
+        fi
+    fi
+
+    msg_blue "Checking ports availability"
+    losf -i :9001 > /dev/null 2>&1
+    if [ $? = "1" ]; then
+        msg_blue "Port 9001 (used by supervisor) is already in use on this machine."
+        exit 1
+    fi
+    losf -i :9002 > /dev/null 2>&1
+    if [ $? = "1" ]; then
+        msg_blue "Port 9002 (used by the Cozy controller) is already in use on this machine."
+        exit 1
+    fi
+    losf -i :9101 > /dev/null 2>&1
+    if [ $? = "1" ]; then
+        msg_blue "Port 9101 (used by the Cozy Data System) is already in use on this machine."
+        exit 1
+    fi
+    losf -i :9103 > /dev/null 2>&1
+    if [ $? = "1" ]; then
+        msg_blue "Port 9103 (used by the Cozy Home) is already in use on this machine."
+        exit 1
+    fi
+    losf -i :9104 > /dev/null 2>&1
+    if [ $? = "1" ]; then
+        msg_blue "Port 9104 (used by the Cozy authentication proxy) is already in use on this machine."
+        exit 1
+    fi
+
     npm install -g coffee-script
     [ ! -d /usr/share/cozy ] && mkdir /usr/share/cozy
     msg_blue "Downloading config file for Cozy Indexer"
@@ -71,59 +117,6 @@ post_install() {
     systemctl enable supervisord
     systemctl start supervisord
 
-    msg_blue 'Configuring Cozy Indexer...'
-    COZY_INDEXER_DIRECTORY=/var/lib/cozy-indexer
-    if [ ! -d $COZY_INDEXER_DIRECTORY ]; then
-        msg_blue "Creating $COZY_INDEXER_DIRECTORY"
-        mkdir -p $COZY_INDEXER_DIRECTORY
-    fi
-    if [ "$(stat -c '%U:%G' $COZY_INDEXER_DIRECTORY)" != "cozy:cozy" ]; then
-        msg_blue "Fixing $COZY_INDEXER_DIRECTORY owner"
-        chown cozy:cozy $COZY_INDEXER_DIRECTORY
-    fi
-
-    CONFIGFILE=/etc/supervisor.d/cozy-indexer.ini
-    if [ -f $CONFIGFILE ]; then
-        BEFORE=$(sha1sum $CONFIGFILE | cut -f1 -d' ')
-        EXISTING=true
-    else
-        BEFORE=
-        EXISTING=false
-    fi
-
-    CONFIGFILE=/usr/share/cozy/supervisor-cozy-indexer
-    AFTER=$(sha1sum $CONFIGFILE | cut -f1 -d' ')
-    if [ "$BEFORE" != "$AFTER" ]; then
-        if $EXISTING; then
-            echo "Your configuration file for Cozy Indexer is different from the one included in this package:"
-            diff /etc/supervisor.d/cozy-indexer.ini /usr/share/cozy/supervisor-cozy-indexer
-            while true; do
-                msg_blue "Do you want to install the new version? [Y/n]"
-                read yn
-                case $yn in
-                    [Nn]* ) echo "The new configuration file is stored on /usr/share/cozy/supervisor-cozy-indexer"; break;;
-                    * ) mv /etc/supervisor.d/cozy-indexer.ini /etc/supervisor.d/cozy-indexer.ini.old;
-                        cp /usr/share/cozy/supervisor-cozy-indexer /etc/supervisor.d/cozy-indexer.ini;
-                        echo "The old configuration file has been renamed as /etc/supervisor.d/cozy-indexer.ini.old"
-                        break;;
-                esac
-            done
-        else
-            cp /usr/share/cozy/supervisor-cozy-indexer /etc/supervisor.d/cozy-indexer.ini
-        fi
-        supervisorctl reload
-    fi
-    COUNT=0;MAX=20
-    while ! curl -s 127.0.0.1:9102/ >/dev/null; do
-        let "COUNT += 1"
-        msg_blue "Waiting for Cozy Indexer to start... ($COUNT/$MAX)"
-        if [[ $COUNT -gt $MAX ]]; then
-            msg_blue "Cozy Indexer is too long to start"
-            exit 1
-        fi
-        sleep 5
-    done
-
     msg_blue 'Configuring Cozy Controller...'
     CONFIGFILE=/etc/supervisor.d/cozy-controller.ini
     if [ -f $CONFIGFILE ]; then
@@ -170,14 +163,17 @@ post_install() {
     msg_blue 'Installing Cozy Platform apps...'
     if [ ! -d /usr/local/cozy/apps/data-system ]; then
         cozy-monitor install-cozy-stack
+        if [ $? = "1" ]; then echo "Error while installing the platform" && exit 1; fi
     fi
     cozy-monitor start data-system
     if [ ! -d /usr/local/cozy/apps/home ]; then
         cozy-monitor install home
+        if [ $? = "1" ]; then echo "Error while installing the platform" && exit 1; fi
     fi
     cozy-monitor start home
     if [ ! -d /usr/local/cozy/apps/proxy ]; then
         cozy-monitor install proxy
+        if [ $? = "1" ]; then echo "Error while installing the platform" && exit 1; fi
     fi
     cozy-monitor start proxy
 
@@ -201,7 +197,7 @@ post_install() {
         echo ''
     fi
 
-    msg_blue "Install default apps"
+    msg_blue "Installing default apps"
     for app in calendar contacts photos emails files sync; do
         if [ ! -f /usr/local/cozy/apps/.first-install-$app ]; then
             if [ -d /usr/local/cozy/apps/$app ]; then
@@ -220,6 +216,17 @@ post_install() {
         fi
     fi
 
+    curl https://raw.githubusercontent.com/cozy/cozy-debian/master/debian-reconfigure-cozy-domain.sh > /usr/local/sbin/debian-reconfigure-cozy-domain.sh
+    chmod +x /usr/local/sbin/debian-reconfigure-cozy-domain.sh
+    echo "cozy-self-hosting ALL=NOPASSWD: /usr/local/sbin/debian-reconfigure-cozy-domain.sh" >> /etc/sudoers
+    if [ ! -f /usr/local/cozy/apps/.first-install-self-hosting ]; then
+        if [ -d /usr/local/cozy/apps/self-hosting ]; then
+            touch /usr/local/cozy/apps/.first-install-self-hosting
+        else
+            cozy-monitor install self-hosting -r https://github.com/cozy/cozy-self-hosting.git && touch /usr/local/cozy/apps/.first-install-self-hosting
+        fi
+    fi
+
     msg_blue 'Generating SSL keys and certificates...'
     if [ ! -f /etc/cozy/dh.pem ]; then
         openssl dhparam -out /etc/cozy/dh.pem -outform PEM -2 2048
@@ -230,7 +237,18 @@ post_install() {
         chmod 400 /etc/cozy/server.key
     fi
 
-    msg_blue "This version of the Cozy package does not come with any configuration for reverse proxying, which is crucial for the platform's well behaviour. In order for the platform to work, please configure a reverse proxy.\nMore Information, please visit https://github.com/babolivier/cozy-archlinux#packages-description"
+    msg_blue "This version of the Cozy package does not come with any configuration for reverse proxying, which is crucial for the platform's well behaviour. In order for the platform to work, please configure a reverse proxy.\nFor more information, please visit https://github.com/babolivier/cozy-archlinux#packages-description"
+}
+
+pre_remove() {
+    which cozy-monitor >/dev/null 2>&1
+    RESULT=$?
+    if [ "$RESULT" = "0" ]; then
+        APPS="$(cozy-monitor status | grep -vE '(mta|postfix|couch|controller|data-system|ds|home|proxy)' | sed 's/:.*//;s/\[Error//' | xargs echo)"
+        APPS="$APPS proxy home data-system"
+        for app in $APPS ; do cozy-monitor uninstall $app ; done
+    fi
+    which supervisorctl >/dev/null 2>&1 && supervisorctl stop cozy-controller
 }
 
 post_remove() {
@@ -256,7 +274,21 @@ post_remove() {
     [ -d /etc/cozy ] && msg_blue "Deleting /etc/cozy directory" && rm -rf /etc/cozy
     [ -d /usr/local/var/log/cozy ] && msg_blue "Deleting /usr/local/var/log/cozy directory" && rm -rf /usr/local/var/log/cozy
     [ -d /usr/local/cozy ] && msg_blue "Deleting /usr/local/cozy directory" && rm -rf /usr/local/cozy
-    [ -d /var/lib/cozy-indexer ] && msg_blue "Deleting /var/lib/cozy-indexer directory" && rm -rf /var/lib/cozy-indexer
     msg_blue "Erasing supervisor configuration" && rm /etc/supervisor.d/cozy*
     supervisorctl reload
+}
+
+post_upgrade() {
+    # Since the last version, we added a new app for self-hosted users
+    msg_blue "Applying latest updates"
+    curl https://raw.githubusercontent.com/cozy/cozy-debian/master/debian-reconfigure-cozy-domain.sh > /usr/local/sbin/debian-reconfigure-cozy-domain.sh
+    chmod +x /usr/local/sbin/debian-reconfigure-cozy-domain.sh
+    echo "cozy-self-hosting ALL=NOPASSWD: /usr/local/sbin/debian-reconfigure-cozy-domain.sh" >> /etc/sudoers
+    if [ ! -f /usr/local/cozy/apps/.first-install-self-hosting ]; then
+        if [ -d /usr/local/cozy/apps/self-hosting ]; then
+            touch /usr/local/cozy/apps/.first-install-self-hosting
+        else
+            cozy-monitor install self-hosting -r https://github.com/cozy/cozy-self-hosting.git && touch /usr/local/cozy/apps/.first-install-self-hosting
+        fi
+    fi
 }
