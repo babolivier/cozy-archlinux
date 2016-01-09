@@ -325,6 +325,13 @@ post_remove() {
     [ -d /usr/local/var/log/cozy ] && msg_blue "Deleting /usr/local/var/log/cozy directory" && rm -rf /usr/local/var/log/cozy
     [ -d /usr/local/cozy ] && msg_blue "Deleting /usr/local/cozy directory" && rm -rf /usr/local/cozy
     [ -f /var/httpd/conf/extra/cozy.conf ] && msg_blue "Erasing Apache2 configuration" && rm -f /var/httpd/conf/extra/cozy.conf
+    msg_blue "Erasing scripts and folders"
+    [ -f /usr/local/sbin/debian-reconfigure-cozy-domain.sh ] && rm -f /usr/local/sbin/debian-reconfigure-cozy-domain.sh
+    [ -d /usr/local/var/cozy ] && rm -rf /usr/local/var/cozy
+    [ -d /usr/share/cozy ] && rm -rf /usr/share/cozy
+    msg_blue "Removing NPM dependencies"
+    [ -f /usr/bin/cozy-controller ] && npm remove -g cozy-controller
+    [ -f /usr/bin/cozy-controller ] && npm remove -g cozy-monitor
     sed -i 's/\n#Cozy configuration\nInclude conf/extra/cozy.conf//' /etc/httpd/conf/httpd.conf
     systemctl restart httpd
     msg_blue "Erasing supervisor configuration" && rm /etc/supervisor.d/cozy*
