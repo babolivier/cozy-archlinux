@@ -64,8 +64,6 @@ post_install() {
 
     npm install -g coffee-script
     [ ! -d /usr/share/cozy ] && mkdir /usr/share/cozy
-    msg_blue "Downloading config file for Cozy Indexer"
-    curl https://raw.githubusercontent.com/cozy/cozy-debian/master/supervisor-cozy-indexer > /usr/share/cozy/supervisor-cozy-indexer
     msg_blue "Downloading config file for Cozy Controller"
     curl https://raw.githubusercontent.com/cozy/cozy-debian/master/supervisor-cozy-controller > /usr/share/cozy/supervisor-cozy-controller
 
