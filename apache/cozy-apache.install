@@ -19,7 +19,7 @@ post_install() {
     msg_blue "Thanks for using Cozy. This package is still being tested, if you encounter any difficulty with it, please head over the AUR comments, the Cozy forums or https://github.com/babolivier/cozy-archlinux/issues to give your feedback."
 
     msg_blue "Checking Node.js version"
-    curl https://raw.githubusercontent.com/cozy/cozy-debian/master/compare-version.py > /usr/share/cozy/compare-version.py
+    curl https://raw.githubusercontent.com/cozy/cozy-debian/983c08f69207fac121cb98ebaa7d32e89a83946b/compare-version.py > /usr/share/cozy/compare-version.py
     NODEJS=`which node`
     if [ -x $NODEJS ]; then
         NODE_VERSION=`$NODEJS -v`
@@ -178,7 +178,7 @@ post_install() {
     cozy-monitor start proxy
 
     msg_blue "Downloading instance configuration script"
-    curl https://raw.githubusercontent.com/cozy/cozy-debian/master/cozy-get-instance-param.py > /usr/share/cozy/cozy-get-instance-param.py
+    curl https://raw.githubusercontent.com/cozy/cozy-debian/983c08f69207fac121cb98ebaa7d32e89a83946b/cozy-get-instance-param.py > /usr/share/cozy/cozy-get-instance-param.py
 
     CURRENT_DOMAIN=$(python2 /usr/share/cozy/cozy-get-instance-param.py domain)
     if [ "$CURRENT_DOMAIN" = "$COZY_DOMAIN" ]; then
