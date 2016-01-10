@@ -1,0 +1,9 @@
+[Unit]
+description=Cozy Controller
+
+[Service]
+Environment="NODE_ENV=production"
+ExecStart=/usr/bin/cozy-controller
+
+[Install]
+WantedBy=multi-user.target
