@@ -45,7 +45,6 @@ post_install() {
         exit 1
     fi
 
-    npm install -g coffee-script
     [ ! -d /usr/share/cozy ] && mkdir /usr/share/cozy
 
     msg_blue "Checking Node.js version"
@@ -64,6 +63,10 @@ post_install() {
             exit 1
         fi
     fi
+
+    msg_blue "Installing CoffeeScript"
+    npm install -g coffee-script
+
     msg_blue "Downloading config file for Cozy Controller"
     curl https://raw.githubusercontent.com/cozy/cozy-debian/master/supervisor-cozy-controller > /usr/share/cozy/supervisor-cozy-controller
 
