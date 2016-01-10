@@ -18,23 +18,6 @@ blue="${bold}$(tput setaf 4)"
 post_install() {
     msg_blue "Thanks for using Cozy. This package is still being tested, if you encounter any difficulty with it, please head over the AUR comments, the Cozy forums or https://github.com/babolivier/cozy-archlinux/issues to give your feedback."
 
-    msg_blue "Checking Node.js version"
-    curl https://raw.githubusercontent.com/cozy/cozy-debian/983c08f69207fac121cb98ebaa7d32e89a83946b/compare-version.py > /usr/share/cozy/compare-version.py
-    NODEJS=`which node`
-    if [ -x $NODEJS ]; then
-        NODE_VERSION=`$NODEJS -v`
-        python2 /usr/share/cozy/compare-version.py "$NODE_VERSION" '>=' '0.10.20' && RESULT=$? || RESULT=$?
-        if [ "$RESULT" = "1" ]; then
-            msg_blue "Node.js version is too low. Recommended versions are all 0.10.xx versions starting from 0.10.20"
-            exit 1
-        fi
-        python2 /usr/share/cozy/compare-version.py "$NODE_VERSION" '<' '0.12.00' && RESULT=$? || RESULT=$?
-        if [ "$RESULT" = "1" ]; then
-            msg_blue "Node.js version is too high. Recommended versions are all 0.10.xx versions starting from 0.10.20"
-            exit 1
-        fi
-    fi
-
     msg_blue "Checking ports availability"
     lsof -i :9001 > /dev/null 2>&1
     if [ $? = "0" ]; then
@@ -64,6 +47,24 @@ post_install() {
 
     npm install -g coffee-script
     [ ! -d /usr/share/cozy ] && mkdir /usr/share/cozy
+    
+    msg_blue "Checking Node.js version"
+    curl https://raw.githubusercontent.com/cozy/cozy-debian/983c08f69207fac121cb98ebaa7d32e89a83946b/compare-version.py > /usr/share/cozy/compare-version.py
+    NODEJS=`which node`
+    if [ -x $NODEJS ]; then
+        NODE_VERSION=`$NODEJS -v`
+        python2 /usr/share/cozy/compare-version.py "$NODE_VERSION" '>=' '0.10.20' && RESULT=$? || RESULT=$?
+        if [ "$RESULT" = "1" ]; then
+            msg_blue "Node.js version is too low. Recommended versions are all 0.10.xx versions starting from 0.10.20"
+            exit 1
+        fi
+        python2 /usr/share/cozy/compare-version.py "$NODE_VERSION" '<' '0.12.00' && RESULT=$? || RESULT=$?
+        if [ "$RESULT" = "1" ]; then
+            msg_blue "Node.js version is too high. Recommended versions are all 0.10.xx versions starting from 0.10.20"
+            exit 1
+        fi
+    fi
+
     msg_blue "Downloading config file for Cozy Controller"
     curl https://raw.githubusercontent.com/cozy/cozy-debian/master/supervisor-cozy-controller > /usr/share/cozy/supervisor-cozy-controller
 
