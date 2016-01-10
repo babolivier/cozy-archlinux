@@ -325,7 +325,7 @@ post_remove() {
     [ -d /etc/cozy ] && msg_blue "Deleting /etc/cozy directory" && rm -rf /etc/cozy
     [ -d /usr/local/var/log/cozy ] && msg_blue "Deleting /usr/local/var/log/cozy directory" && rm -rf /usr/local/var/log/cozy
     [ -d /usr/local/cozy ] && msg_blue "Deleting /usr/local/cozy directory" && rm -rf /usr/local/cozy
-	[ -f /etc/nginx/cozy.conf ] && msg_blue "Erasing Nginx configuration" && rm -f /etc/nginx/cozy.conf
+    [ -f /etc/nginx/cozy.conf ] && msg_blue "Erasing Nginx configuration" && rm -f /etc/nginx/cozy.conf
     msg_blue "Erasing scripts and folders"
     [ -f /usr/local/sbin/debian-reconfigure-cozy-domain.sh ] && rm -f /usr/local/sbin/debian-reconfigure-cozy-domain.sh
     [ -d /usr/local/var/cozy ] && rm -rf /usr/local/var/cozy
