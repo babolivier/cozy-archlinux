@@ -4,10 +4,10 @@ RUN sed -i 's/^SigLevel    = Required DatabaseOptional/SigLevel = Never/' /etc/p
 RUN pacman -Syu --noconfirm
 RUN pacman-db-upgrade
 RUN pacman -S base-devel --noconfirm
-RUN useradd brendan -m
-RUN echo "brendan ALL=NOPASSWD: ALL" >> /etc/sudoers
+RUN useradd pkg -m
+RUN echo "pkg ALL=NOPASSWD: ALL" >> /etc/sudoers
 
-USER brendan
-WORKDIR /home/brendan
+USER pkg
+WORKDIR /home/pkg
 
 ENTRYPOINT makepkg -si
