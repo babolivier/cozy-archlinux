@@ -1,13 +1,9 @@
-FROM base/archlinux
+FROM babolivier/arch-pkg-env
 
-RUN sed -i 's/^SigLevel    = Required DatabaseOptional/SigLevel = Never/' /etc/pacman.conf
-RUN pacman -Syu --noconfirm
-RUN pacman-db-upgrade
-RUN pacman -S base-devel --noconfirm
-RUN useradd pkg -m
-RUN echo "pkg ALL=NOPASSWD: ALL" >> /etc/sudoers
+RUN sudo pacman -S git --noconfirm
 
-USER pkg
-WORKDIR /home/pkg
+# Yaourt
+RUN git clone https://aur.archlinux.org/package-query.git && cd package-query && makepkg -si --noconfirm
+RUN git clone https://aur.archlinux.org/yaourt.git && cd yaourt && makepkg -si --noconfirm
 
-ENTRYPOINT makepkg -si
+#ENTRYPOINT makepkg -si
