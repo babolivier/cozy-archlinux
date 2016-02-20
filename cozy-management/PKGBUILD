@@ -1,0 +1,27 @@
+# Maintainer: Brendan Abolivier <brendan@archlinux.info>
+pkgname=cozy-management
+pkgver=1.0.0
+pkgrel=1
+epoch=
+pkgdesc="Helper to manage a self-hosted Cozy"
+arch=('any')
+url="https://github.com/cozy/python_cozy_management"
+license=('GPL3')
+depends=('python2' 'python2-requests' 'python2-docopt' 'python2-pyopenssl' 'python2-psutil' 'python2-setuptools' 'git')
+optdepends=()
+makedepends=()
+provides=('cozy-management')
+source=(git+https://github.com/cozy/python_cozy_management)
+sha256sums=('SKIP')
+
+build() {
+    cd python_cozy_management
+    python2 ./setup.py build
+}
+
+package() {
+    cd python_cozy_management
+    mkdir -p $pkgdir"/usr/lib/python2.7/site-packages"
+    export PYTHONPATH=$pkgdir"/usr/lib/python2.7/site-packages/"
+    python2 ./setup.py install --prefix=$pkgdir"/usr"
+}
