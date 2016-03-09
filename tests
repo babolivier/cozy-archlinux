@@ -1,0 +1,9 @@
+#!/bin/sh
+
+res=$(curl http://0.0.0.0:9104)
+
+if [ "$res" == "Moved Temporarily. Redirecting to /login" ]; then
+    echo "SUCCESS"
+else
+    echo "ERROR"
+fi
