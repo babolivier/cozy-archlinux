@@ -10,7 +10,7 @@ license=('GPL3')
 groups=()
 depends=('ca-certificates' 'couchdb' 'supervisor' 'bash' 'curl' 'git' 'imagemagick'
     'openssl' 'libxml2' 'libxslt' 'python2' 'python2-setuptools' 'python2-virtualenv' 'sqlite'
-    'nodejs-lts-argon' 'pwgen' 'pngcrush' 'lsof')
+    'nodejs-lts-bin' 'pwgen' 'pngcrush' 'lsof')
 makedepends=()
 checkdepends=()
 optdepends=('libjpeg-turbo: Needed for the Kresus app'
