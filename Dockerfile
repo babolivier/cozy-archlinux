@@ -8,5 +8,5 @@ RUN sudo pacman -S git --noconfirm
 RUN git clone https://aur.archlinux.org/package-query.git && cd package-query && makepkg -si --noconfirm
 RUN git clone https://aur.archlinux.org/yaourt.git && cd yaourt && makepkg -si --noconfirm
 
-# NodeJS
-RUN yaourt -S nodejs-lts-bin --noconfirm
+# Custom dependencies
+RUN yaourt -S nodejs-lts-bin cozy-management --noconfirm
