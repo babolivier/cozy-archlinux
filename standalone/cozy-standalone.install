@@ -67,7 +67,7 @@ post_install() {
         while ! curl -s 127.0.0.1:5984 >/dev/null; do
             let "COUNT += 1"
             msg "Waiting for CouchDB to start... ($COUNT/$MAX)"
-            if [[ $COUNT -gt $MAX ]]; then
+            if [[ $COUNT -ge $MAX ]]; then
                 msg "CouchDB is too long to start"
                 exit 1
             fi
@@ -94,7 +94,7 @@ post_install() {
     while ! curl -s 127.0.0.1:9002 >/dev/null; do
         let "COUNT += 1"
         msg "Waiting for Cozy Controller to start... ($COUNT/$MAX)"
-        if [[ $COUNT -gt $MAX ]]; then
+        if [[ $COUNT -ge $MAX ]]; then
             msg "Cozy Controller is too long to start"
             exit 1
         fi
