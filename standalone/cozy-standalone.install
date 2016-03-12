@@ -13,12 +13,6 @@ blue="${bold}$(tput setaf 4)"
 
 post_install() {
     msg "Checking ports availability"
-    msg "9001"
-    lsof -i :9001 > /dev/null 2>&1
-    if [ $? = "0" ]; then
-        msg "Port 9001 (used by supervisor) is already in use on this machine."
-        exit 1
-    fi
     msg "9002"
     lsof -i :9002 > /dev/null 2>&1
     if [ $? = "0" ]; then
