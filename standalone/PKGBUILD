@@ -34,10 +34,5 @@ package() {
     [ ! -d /usr/share/cozy ] && install -d $pkgdir/usr/share/cozy
     [ ! -d /etc/cozy ] && install -d $pkgdir/etc/cozy
 
-    msg 'Generating CouchDB tokens...'
-    touch $pkgdir/etc/cozy/couchdb.login $pkgdir/etc/cozy/couchdb.login
-    pwgen -1 > $pkgdir/etc/cozy/couchdb.login && \
-    pwgen -1 >> $pkgdir/etc/cozy/couchdb.login
-
     cp supervisor-cozy-controller $pkgdir/usr/share/cozy
 }

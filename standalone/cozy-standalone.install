@@ -60,6 +60,9 @@ post_install() {
     chown -hR cozy /etc/cozy
 
     if [ ! -f /etc/cozy/couchdb.login ]; then
+        msg 'Generating CouchDB tokens...'
+        pwgen -1 > /etc/cozy/couchdb.login && \
+        pwgen -1 >> /etc/cozy/couchdb.login
         msg 'Enabling CouchDB'
         systemctl enable couchdb
         systemctl start couchdb
@@ -161,7 +164,7 @@ post_install() {
 
     msg "This version of the Cozy package does not come with any configuration for reverse proxying, which is crucial for the platform's well behaviour. In order for the platform to work, please configure a reverse proxy.\nFor more information, please visit https://github.com/babolivier/cozy-archlinux#packages-description"
     echo "\nBefore being able to try Cozy, you need to run the first-time-configuration script:\n"
-    echo "\t/usr/bin/configure-cozy cozy.example.tld\n"
+    echo "\t# /usr/bin/configure-cozy cozy.example.tld\n"
     echo "With your Cozy's own domain instead of \"cozy.example.tld\""
 }
 
@@ -177,26 +180,9 @@ pre_remove() {
 }
 
 post_remove() {
-    msg "The Cozy database contains all your user data. Keeping it could be troublesome for further installations."
-    while true; do
-        msg "Do you want to erase the database? [Y/n]"
-        read yn
-        case $yn in
-            [Nn]* ) KEEP_DB=false; break;;
-            * ) KEEP_DB=true; break;;
-        esac
-    done
+    msg "The Cozy database contains all your user data. Keeping it could be troublesome for further installations. It will not be removed, unless you run "
+    msg "\t# /usr/bin/cozy-rm-db"
 
-    if [ $KEEP_DB ]; then
-        COUCH_USER=$(sed -n '1,1p' /etc/cozy/couchdb.login)
-        COUCH_PASS=$(sed -n '2,1p' /etc/cozy/couchdb.login)
-        msg "Purging cozy database"
-        curl -X DELETE http://${COUCH_USER}:${COUCH_PASS}@127.0.0.1:5984/cozy
-        msg "Purging CouchDB cozy user"
-        curl -X DELETE http://${COUCH_USER}:${COUCH_PASS}@127.0.0.1:5984/_config/admins/${COUCH_USER}
-    else
-        msg "Keeping the Cozy database"
-    fi
     [ -d /etc/cozy ] && msg "Deleting /etc/cozy directory" && rm -rf /etc/cozy
     [ -d /usr/local/var/log/cozy ] && msg "Deleting /usr/local/var/log/cozy directory" && rm -rf /usr/local/var/log/cozy
     [ -d /usr/local/cozy ] && msg "Deleting /usr/local/cozy directory" && rm -rf /usr/local/cozy
