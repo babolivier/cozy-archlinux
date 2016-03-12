@@ -59,7 +59,7 @@ post_install() {
         pwgen -1 >> /etc/cozy/couchdb.login
         msg 'Enabling CouchDB'
         systemctl enable couchdb
-        systemctl start couchdb
+        systemctl restart couchdb
         COUNT=0;MAX=20
         while ! curl -s 127.0.0.1:5984 >/dev/null; do
             let "COUNT += 1"
@@ -85,7 +85,7 @@ post_install() {
 
     msg 'Starting supervisor'
     systemctl enable supervisord
-    systemctl start supervisord
+    systemctl restart supervisord
 
     COUNT=0;MAX=20
     while ! curl -s 127.0.0.1:9002 >/dev/null; do
