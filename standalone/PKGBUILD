@@ -15,8 +15,8 @@ makedepends=()
 checkdepends=()
 optdepends=('libjpeg-turbo: Needed for the Kresus app'
             'libyaml: Needed for the Kresus app')
-provides=()
-conflicts=()
+provides=("cozy")
+conflicts=("cozy")
 replaces=()
 backup=()
 options=()
@@ -29,7 +29,27 @@ md5sums=("SKIP"
          "603ae0e25b7bf756b3bdc5da20efeec5")
 
 build() {
-    msg "Thanks for using Cozy. This package is still being tested, if you encounter any difficulty with it, please head over the AUR comments, the Cozy forums or https://github.com/babolivier/cozy-archlinux/issues to give your feedback."
+    msg "Checking ports availability"
+    lsof -i :9002 > /dev/null 2>&1
+    if [ $? = "0" ]; then
+        msg "Port 9002 (used by the Cozy controller) is already in use on this machine."
+        exit 1
+    fi
+    lsof -i :9101 > /dev/null 2>&1
+    if [ $? = "0" ]; then
+        msg "Port 9101 (used by the Cozy Data System) is already in use on this machine."
+        exit 1
+    fi
+    lsof -i :9103 > /dev/null 2>&1
+    if [ $? = "0" ]; then
+        msg "Port 9103 (used by the Cozy Home) is already in use on this machine."
+        exit 1
+    fi
+    lsof -i :9104 > /dev/null 2>&1
+    if [ $? = "0" ]; then
+        msg "Port 9104 (used by the Cozy authentication proxy) is already in use on this machine."
+        exit 1
+    fi
 }
 
 package() {
