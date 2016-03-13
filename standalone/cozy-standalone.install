@@ -12,6 +12,28 @@ bold="${all_off}$(tput bold)"
 blue="${bold}$(tput setaf 4)"
 
 post_install() {
+    msg "Checking ports availability"
+    lsof -i :9002 > /dev/null 2>&1
+    if [ $? = "0" ]; then
+        msg "Port 9002 (used by the Cozy controller) is already in use on this machine."
+        exit 1
+    fi
+    lsof -i :9101 > /dev/null 2>&1
+    if [ $? = "0" ]; then
+        msg "Port 9101 (used by the Cozy Data System) is already in use on this machine."
+        exit 1
+    fi
+    lsof -i :9103 > /dev/null 2>&1
+    if [ $? = "0" ]; then
+        msg "Port 9103 (used by the Cozy Home) is already in use on this machine."
+        exit 1
+    fi
+    lsof -i :9104 > /dev/null 2>&1
+    if [ $? = "0" ]; then
+        msg "Port 9104 (used by the Cozy authentication proxy) is already in use on this machine."
+        exit 1
+    fi
+
     msg "Installing CoffeeScript"
     npm install -g coffee-script
 

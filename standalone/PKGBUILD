@@ -29,27 +29,7 @@ md5sums=("SKIP"
          "603ae0e25b7bf756b3bdc5da20efeec5")
 
 build() {
-    msg "Checking ports availability"
-    lsof -i :9002 > /dev/null 2>&1
-    if [ $? = "0" ]; then
-        msg "Port 9002 (used by the Cozy controller) is already in use on this machine."
-        exit 1
-    fi
-    lsof -i :9101 > /dev/null 2>&1
-    if [ $? = "0" ]; then
-        msg "Port 9101 (used by the Cozy Data System) is already in use on this machine."
-        exit 1
-    fi
-    lsof -i :9103 > /dev/null 2>&1
-    if [ $? = "0" ]; then
-        msg "Port 9103 (used by the Cozy Home) is already in use on this machine."
-        exit 1
-    fi
-    lsof -i :9104 > /dev/null 2>&1
-    if [ $? = "0" ]; then
-        msg "Port 9104 (used by the Cozy authentication proxy) is already in use on this machine."
-        exit 1
-    fi
+    echo "Hello world" > /dev/null
 }
 
 package() {
