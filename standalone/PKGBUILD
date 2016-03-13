@@ -39,5 +39,4 @@ package() {
     cp supervisor-cozy-controller $pkgdir/usr/share/cozy
     mkdir -p $pkgdir/usr/bin
     cp configure-cozy-domain $pkgdir/usr/bin
-    cp cozy-rm-db $pkgdir/usr/bin
 }
