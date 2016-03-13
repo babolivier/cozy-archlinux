@@ -195,16 +195,22 @@ post_remove() {
 }
 
 post_upgrade() {
-    # Since the last version, we added a new app for self-hosted users
-    msg "Applying latest updates"
-    curl https://raw.githubusercontent.com/cozy/cozy-debian/master/debian-reconfigure-cozy-domain.sh > /usr/local/sbin/debian-reconfigure-cozy-domain.sh
-    chmod +x /usr/local/sbin/debian-reconfigure-cozy-domain.sh
-    echo "cozy-self-hosting ALL=NOPASSWD: /usr/local/sbin/debian-reconfigure-cozy-domain.sh" >> /etc/sudoers
-    if [ ! -f /usr/local/cozy/apps/.first-install-self-hosting ]; then
-        if [ -d /usr/local/cozy/apps/self-hosting ]; then
-            touch /usr/local/cozy/apps/.first-install-self-hosting
-        else
-            cozy-monitor install self-hosting -r https://github.com/cozy/cozy-self-hosting.git && touch /usr/local/cozy/apps/.first-install-self-hosting
+    # Check if the install went well
+    cozy-monitor status > /dev/null/ 2>&1
+    if [ $? = "1" ]; then
+        post_install
+    else
+        # Since the last version, we added a new app for self-hosted users
+        msg "Applying latest updates"
+        curl https://raw.githubusercontent.com/cozy/cozy-debian/master/debian-reconfigure-cozy-domain.sh > /usr/local/sbin/debian-reconfigure-cozy-domain.sh
+        chmod +x /usr/local/sbin/debian-reconfigure-cozy-domain.sh
+        echo "cozy-self-hosting ALL=NOPASSWD: /usr/local/sbin/debian-reconfigure-cozy-domain.sh" >> /etc/sudoers
+        if [ ! -f /usr/local/cozy/apps/.first-install-self-hosting ]; then
+            if [ -d /usr/local/cozy/apps/self-hosting ]; then
+                touch /usr/local/cozy/apps/.first-install-self-hosting
+            else
+                cozy-monitor install self-hosting -r https://github.com/cozy/cozy-self-hosting.git && touch /usr/local/cozy/apps/.first-install-self-hosting
+            fi
         fi
     fi
 }
