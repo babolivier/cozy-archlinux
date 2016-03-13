@@ -196,7 +196,7 @@ post_remove() {
 
 post_upgrade() {
     # Check if the install went well
-    cozy-monitor status > /dev/null/ 2>&1
+    cozy-monitor status > /dev/null 2>&1
     if [ $? = "1" ]; then
         post_install
     else
