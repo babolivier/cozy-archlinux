@@ -27,8 +27,8 @@ source=("https://raw.githubusercontent.com/cozy/cozy-debian/master/supervisor-co
         "cozy-rm-db")
 noextract=()
 md5sums=("SKIP"
-         "b26d9d750a3e4b5ba2f693ff8ef23bb5"
-         "724ea5f320279d5447c23fe2cf87e238")
+         "603ae0e25b7bf756b3bdc5da20efeec5"
+         "a24c8cd411935db1cb09073b8db6c557")
 
 build() {
     msg "Thanks for using Cozy. This package is still being tested, if you encounter any difficulty with it, please head over the AUR comments, the Cozy forums or https://github.com/babolivier/cozy-archlinux/issues to give your feedback."
