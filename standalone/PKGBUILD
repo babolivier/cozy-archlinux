@@ -23,12 +23,10 @@ options=()
 install=$pkgname.install
 changelog=
 source=("https://raw.githubusercontent.com/cozy/cozy-debian/master/supervisor-cozy-controller"
-        "configure-cozy-domain"
-        "cozy-rm-db")
+        "configure-cozy-domain")
 noextract=()
 md5sums=("SKIP"
-         "603ae0e25b7bf756b3bdc5da20efeec5"
-         "a24c8cd411935db1cb09073b8db6c557")
+         "603ae0e25b7bf756b3bdc5da20efeec5")
 
 build() {
     msg "Thanks for using Cozy. This package is still being tested, if you encounter any difficulty with it, please head over the AUR comments, the Cozy forums or https://github.com/babolivier/cozy-archlinux/issues to give your feedback."
